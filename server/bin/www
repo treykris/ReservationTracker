@@ -7,6 +7,7 @@
 var app = require('../app');
 var debug = require('debug')('server:server');
 var http = require('http');
+const models = require('../db/models');
 
 /**
  * Get port from environment and store in Express.
@@ -27,7 +28,7 @@ var server = http.createServer(app);
 
 server.listen(port);
 server.on('error', onError);
-server.on('listening', onListening);
+//server.on('listening', onListening);
 
 /**
  * Normalize a port into a number, string, or false.
@@ -58,9 +59,7 @@ function onError(error) {
     throw error;
   }
 
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+  var bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
@@ -81,10 +80,26 @@ function onError(error) {
  * Event listener for HTTP server "listening" event.
  */
 
-function onListening() {
-  var addr = server.address();
-  var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
-  debug('Listening on ' + bind);
-}
+// function onListening() {
+//   var addr = server.address();
+//   var bind = typeof addr === 'string'
+//     ? 'pipe ' + addr
+//     : 'port ' + addr.port;
+//   debug('Listening on ' + bind);
+// }
+
+// await db.sync();
+
+const init = async () => {
+  // await models.db.sync(); //same as below
+  //await db.sync();
+  await models.Reservations.sync();
+
+  console.log(' finished syncing ');
+
+  //const port = 3000;
+  server.listen(port, () => {
+    console.log(`server listening on port ${port}`);
+  });
+};
+init();

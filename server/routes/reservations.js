@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+const {db, Reservations} = require('../db/models/index');
 
 /* GET reservations listing. */
 router.get('/', function(req, res, next) {
@@ -7,6 +8,22 @@ router.get('/', function(req, res, next) {
     {id: 1, name: 'Matt Hijo, party of 2 @ 8pm'},
     {id: 2, name: 'Patrick Milo, party of 5 @ 2pm'}
   ]);
+});
+
+router.post('/', async (req, res, next) => {
+  try {
+    const todayDate = Date.now();
+    const findRes = await Reservations.findAll({
+      where: {
+        date: {
+          $gte: todayDate
+        }
+      }
+    });
+    res.json({reservations: findRes});
+  } catch (error) {
+    next(error);
+  }
 });
 
 module.exports = router;
