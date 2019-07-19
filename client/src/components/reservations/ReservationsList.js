@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import './ReservationsList.css';
 
 class ReservationsList extends Component {
   state = {
@@ -16,18 +17,18 @@ class ReservationsList extends Component {
     const {reservations} = this.state;
     const listOfReservations = reservations.map(reservation => {
       return (
-        <div key={reservation.id}>
-          <h1>{reservation.name}</h1>
-          <p>{reservation.date}</p>
-          <p>{reservation.time}</p>
+        <div key={reservation.id} className="reservation">
+          <h1 className="reservation__name">{reservation.name}</h1>
+          <p className="reservation__date">{reservation.date}</p>
+          <p className="reservation__time">{reservation.time}</p>
         </div>
       );
     });
 
     return (
       <div className="App">
-        <h1>Reservations</h1>
-        {listOfReservations}
+        <h1 className="header">Reservations</h1>
+        <div className="container">{listOfReservations}</div>
       </div>
     );
   }
