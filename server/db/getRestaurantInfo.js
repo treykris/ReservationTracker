@@ -1,12 +1,9 @@
-const mockRestaurant = {
-  opens_at: '10am',
-  closes_at: '10pm'
-};
+const restaurants = require('./mockRestaurants');
 
 const getRestaurantInfo = message => {
   const [restaurant] = message;
-  const {opens_at, closes_at} = mockRestaurant;
-  return `${restaurant} opens at ${opens_at} and closes at ${closes_at}.`;
+  const {opensAt, closesAt} = restaurants[0];
+  return `${restaurant} opens at ${opensAt} and closes at ${closesAt}.`;
 };
 
 module.exports = getRestaurantInfo;
