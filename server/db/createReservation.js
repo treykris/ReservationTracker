@@ -3,7 +3,7 @@ const Reservation = require('./models/reservations');
 const mockRestaurants = require('./mockRestaurants');
 const ReservationResponse = require('../constants').ReservationResponse;
 
-const createReservation = async (message, twilioData) => {
+const createReservation = async (message, apiData) => {
   const [name, date, reservationTime] = message;
   const reservationDate = moment(date, 'MM-DD-YYYY')
     .utc()
@@ -12,8 +12,8 @@ const createReservation = async (message, twilioData) => {
   const reservationRecord = {
     name,
     time: parsedReservationTime,
-    phone: twilioData.From,
-    date: reservationDate
+    date: reservationDate,
+    data: apiData
   };
   const todaysDate = Date.now();
   const hoursToMS = 1000 * 60 * 60 * 24;
