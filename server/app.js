@@ -9,8 +9,21 @@ const reservationsRouter = require('./routes/reservations');
 const parseMessage = require('./utils/parseMessage');
 const createReservation = require('./db/createReservation');
 const getRestaurantInfo = require('./db/getRestaurantInfo');
+const mongoose = require('mongoose');
 const app = express();
 const MessagingResponse = require('twilio').twiml.MessagingResponse;
+require('dotenv').config();
+
+const DATABASE_URL = process.env.MLAB_URL;
+
+mongoose.Promise = global.Promise;
+mongoose
+  .connect(DATABASE_URL, {useNewUrlParser: true})
+  .catch(error => console.log(error));
+
+mongoose.connection.once('open', mssg => {
+  console.log(`Connected to mongoDB`);
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -25,37 +38,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/reservations', reservationsRouter);
 
-/**
- *
- * Users will send us their restaurant inquiries in a format separated by " - "
- *
- * Format:
- * `RestaurantRequest - Name - Date - Time`
- * `RestaurantRequest - Restaurant`
- *
- * Examples:
- * Reservation format:
- * `Reserveration - Jane Doe - June 4, 2019 - 4pm`;
- *
- * Information about restaurant format:
- * `Information - Peter Luger`
- *
- */
-app.post('/sms', (req, res) => {
+app.post('/sms', async (req, res) => {
   const twiml = new MessagingResponse();
   const twilioData = req.body;
   const [restaurantRequest, ...message] = parseMessage(req.body.Body);
   const restaurantRequestLowerCase = restaurantRequest.toLowerCase();
-  let statusMessage;
-
-  if (restaurantRequestLowerCase === 'reservation')
-    statusMessage = createReservation(message, twilioData);
-
-  if (
-    restaurantRequestLowerCase === 'information' ||
-    restaurantRequestLowerCase === 'info'
-  )
-    statusMessage = getRestaurantInfo(message);
+  const statusMessage = await createReservation(message, twilioData);
 
   twiml.message(statusMessage);
   res.writeHead(200, {'Content-Type': 'text/xml'});
