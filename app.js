@@ -14,7 +14,7 @@ const app = express();
 const MessagingResponse = require('twilio').twiml.MessagingResponse;
 require('dotenv').config();
 
-const DATABASE_URL = process.env.MLAB_URL;
+const DATABASE_URL = process.env.MONGODB_URI || process.env.MLAB_URL;
 
 mongoose.Promise = global.Promise;
 mongoose
