@@ -6,7 +6,8 @@
     "start": "PORT=3001 node ./bin/www",
     "start:nodemon": "PORT=3001 nodemon ./bin/www",
     "seed": "node ./db/seed.js",
-    "test": "jest"
+    "test": "jest",
+    "heroku-postbuild": "cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
