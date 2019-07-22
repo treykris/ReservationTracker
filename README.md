@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/treykris/ReservationTracker.svg?branch=master)](https://travis-ci.com/treykris/ReservationTracker)
+
 # ReservationTracker
 
 ## Table of Contents
@@ -58,6 +60,12 @@ npm run start
 ```
 Visit `localhost:3000`
 
+
+In another prompt window run:
+```
+ngrok http 3001
+```
+This will handle the requests to Slack and Twilio end points on your server locally.
 
 #### Notice
 Client requests are being proxied to the server that is listening on port `3001`, if you'd like to change the server port number, be sure to change the port number in the `start` property found in `/server/package.json` and the `proxy` property in the `client/package.json` to your new port number.
